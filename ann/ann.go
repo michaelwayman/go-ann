@@ -14,9 +14,7 @@ type NeuralNetwork struct {
 	OutputWeights     Matrix
 }
 
-/**
- *	Sigmoidal function
- */
+// Sigmoidal function
 func ActivationFunction(x float64) float64 {
 	return 1.0 / (1.0 + math.Exp(-x))
 }
@@ -36,14 +34,12 @@ func (nn NeuralNetwork) Train(inputs []float64, targets []float64) {
 	inputMatrix := ToMatrix(inputs, len(inputs), 1)
 	targetMatrix := ToMatrix(targets, len(targets), 1)
 
-	// Calculate signals going into the hidden layer
+	// Calculate signals going in/out of the hidden layer
 	hiddenInputs := Dot(nn.InputWeights, inputMatrix)
-	// Calculate signals coming out of the hidden layer
 	hiddenOutputs := Map(hiddenInputs, ActivationFunction)
 
-	// Calculate signals going into the output layer
+	// Calculate signals going in/out of the output layer
 	finalInputs := Dot(nn.OutputWeights, hiddenOutputs)
-	// Calculate signals coming out of the output layer
 	finalOutputs := Map(finalInputs, ActivationFunction)
 
 	// Output layer error is simple (target - actual)
@@ -65,14 +61,12 @@ func (nn NeuralNetwork) Query(inputs []float64) []float64 {
 	// Create matrix out of our training data
 	inputMatrix := ToMatrix(inputs, len(inputs), 1)
 
-	// Calculate signals going into the hidden layer
+	// Calculate signals going in/out of the hidden layer
 	hiddenInputs := Dot(nn.InputWeights, inputMatrix)
-	// Calculate signals coming out of the hidden layer
 	hiddenOutputs := Map(hiddenInputs, ActivationFunction)
 
-	// Calculate signals going into the output layer
+	// Calculate signals going in/out of the output layer
 	finalInputs := Dot(nn.OutputWeights, hiddenOutputs)
-	// Calculate signals coming out of the output layer
 	finalOutputs := Map(finalInputs, ActivationFunction)
 
 	return finalOutputs.ToArray()
