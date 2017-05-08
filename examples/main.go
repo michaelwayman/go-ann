@@ -2,20 +2,21 @@ package main
 
 import (
 	"fmt"
+	"github.com/michaelwayman/go-ann/ann"
 )
 
-func TrainNeuralNetwork(nn NeuralNetwork) {
+func TrainNeuralNetwork(nn ann.NeuralNetwork) {
 	cleanedTrainingData := CleanedDataForNN("mnist_train.csv")
 	for {
 		inputs, targets, err := cleanedTrainingData()
 		if err != nil {
 			break
 		}
-		nn.train(inputs, targets)
+		nn.Train(inputs, targets)
 	}
 }
 
-func TestNeuralNetwork(nn NeuralNetwork) float64 {
+func TestNeuralNetwork(nn ann.NeuralNetwork) float64 {
 
 	// Scoreboard to keep track of how many we got correct
 	correct, total := 0.0, 0.0
@@ -43,32 +44,38 @@ func TestNeuralNetwork(nn NeuralNetwork) float64 {
 		if err != nil {
 			break
 		}
-		accuracy = scoreboard(nn.query(inputs), targets)
+		accuracy = scoreboard(nn.Query(inputs), targets)
 	}
 	return accuracy
 }
 
-func main() {
-	fmt.Println("Starting neural network to recognize handwritten digits.")
+var welcomeMsg = `
+Artificial Neural Network to solve the MNIST data set.
 
-	// 0
-	nn := NeuralNetwork{
-		numberInputs:      784,
-		numberOutputs:     10,
-		numberHiddenNodes: 200,
-		learningRate:      0.1,
-		inputWeights:      RandomWeightMatrix(200, 784),
-		outputWeights:     RandomWeightMatrix(10, 200),
+ 1. Initialize the ANN.
+ 2. Read the MNIST training data set and train the ANN.
+ 3. Read the MNIST testing data set and test the ANN.
+ 4. Print the accuracy of the ANN.
+`
+
+func main() {
+
+	fmt.Println(welcomeMsg)
+
+	nn := ann.NeuralNetwork{
+		NumberInputs:      784,
+		NumberOutputs:     10,
+		NumberHiddenNodes: 200,
+		LearningRate:      0.1,
+		InputWeights:      ann.RandomWeightMatrix(200, 784),
+		OutputWeights:     ann.RandomWeightMatrix(10, 200),
 	}
 
-	// 1
 	fmt.Println("Training the neural network.")
 	TrainNeuralNetwork(nn)
 
-	// 2
 	fmt.Println("Testing the neural network.")
 	accuracy := TestNeuralNetwork(nn)
 
-	// 3
 	fmt.Printf("Neural network is %.2f%% accurate at predicting handwritten digits.\n", accuracy*100.0)
 }

@@ -1,4 +1,4 @@
-package main
+package ann
 
 import (
 	// "fmt"
@@ -6,12 +6,12 @@ import (
 )
 
 type NeuralNetwork struct {
-	numberInputs      int
-	numberOutputs     int
-	numberHiddenNodes int
-	learningRate      float64
-	inputWeights      Matrix
-	outputWeights     Matrix
+	NumberInputs      int
+	NumberOutputs     int
+	NumberHiddenNodes int
+	LearningRate      float64
+	InputWeights      Matrix
+	OutputWeights     Matrix
 }
 
 /**
@@ -22,27 +22,27 @@ func ActivationFunction(x float64) float64 {
 }
 
 func AdjustmentMatrix(a, b Matrix) Matrix {
-	m := NewMatrix(a.rows(), a.cols())
-	for i := 0; i < a.rows(); i++ {
-		for j := 0; j < a.cols(); j++ {
+	m := NewMatrix(a.Rows(), a.Cols())
+	for i := 0; i < a.Rows(); i++ {
+		for j := 0; j < a.Cols(); j++ {
 			m[i][j] = a[i][j] * b[i][j] * (1.0 - b[i][j])
 		}
 	}
 	return m
 }
 
-func (nn NeuralNetwork) train(inputs []float64, targets []float64) {
+func (nn NeuralNetwork) Train(inputs []float64, targets []float64) {
 	// Create matrices out of our training data
-	inputMatrix := toMatrix(inputs, len(inputs), 1)
-	targetMatrix := toMatrix(targets, len(targets), 1)
+	inputMatrix := ToMatrix(inputs, len(inputs), 1)
+	targetMatrix := ToMatrix(targets, len(targets), 1)
 
 	// Calculate signals going into the hidden layer
-	hiddenInputs := Dot(nn.inputWeights, inputMatrix)
+	hiddenInputs := Dot(nn.InputWeights, inputMatrix)
 	// Calculate signals coming out of the hidden layer
 	hiddenOutputs := Map(hiddenInputs, ActivationFunction)
 
 	// Calculate signals going into the output layer
-	finalInputs := Dot(nn.outputWeights, hiddenOutputs)
+	finalInputs := Dot(nn.OutputWeights, hiddenOutputs)
 	// Calculate signals coming out of the output layer
 	finalOutputs := Map(finalInputs, ActivationFunction)
 
@@ -50,30 +50,30 @@ func (nn NeuralNetwork) train(inputs []float64, targets []float64) {
 	outputErrors := Sub(targetMatrix, finalOutputs)
 
 	// hidden layer error is output error split by weights
-	hiddenError := Dot(Transpose(nn.outputWeights), outputErrors)
+	hiddenError := Dot(Transpose(nn.OutputWeights), outputErrors)
 
 	// gradient descent
-	too := Dot(AdjustmentMatrix(outputErrors, finalOutputs), Transpose(hiddenOutputs)).mult(nn.learningRate)
-	poo := Dot(AdjustmentMatrix(hiddenError, hiddenOutputs), Transpose(inputMatrix)).mult(nn.learningRate)
+	too := Dot(AdjustmentMatrix(outputErrors, finalOutputs), Transpose(hiddenOutputs)).Mult(nn.LearningRate)
+	poo := Dot(AdjustmentMatrix(hiddenError, hiddenOutputs), Transpose(inputMatrix)).Mult(nn.LearningRate)
 
 	// Adjust our weights
-	nn.outputWeights.add(too)
-	nn.inputWeights.add(poo)
+	nn.OutputWeights.Add(too)
+	nn.InputWeights.Add(poo)
 }
 
-func (nn NeuralNetwork) query(inputs []float64) []float64 {
+func (nn NeuralNetwork) Query(inputs []float64) []float64 {
 	// Create matrix out of our training data
-	inputMatrix := toMatrix(inputs, len(inputs), 1)
+	inputMatrix := ToMatrix(inputs, len(inputs), 1)
 
 	// Calculate signals going into the hidden layer
-	hiddenInputs := Dot(nn.inputWeights, inputMatrix)
+	hiddenInputs := Dot(nn.InputWeights, inputMatrix)
 	// Calculate signals coming out of the hidden layer
 	hiddenOutputs := Map(hiddenInputs, ActivationFunction)
 
 	// Calculate signals going into the output layer
-	finalInputs := Dot(nn.outputWeights, hiddenOutputs)
+	finalInputs := Dot(nn.OutputWeights, hiddenOutputs)
 	// Calculate signals coming out of the output layer
 	finalOutputs := Map(finalInputs, ActivationFunction)
 
-	return finalOutputs.toArray()
+	return finalOutputs.ToArray()
 }

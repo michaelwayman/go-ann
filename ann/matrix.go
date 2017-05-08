@@ -1,27 +1,26 @@
-package main
+package ann
 
 import (
-	// "fmt"
 	"math/rand"
 )
 
 type Matrix [][]float64
 
-func (m Matrix) rows() int {
+func (m Matrix) Rows() int {
 	return len(m)
 }
 
-func (m Matrix) cols() int {
+func (m Matrix) Cols() int {
 	return len(m[0])
 }
 
 // Add each each element in `a` to `m`
-func (m Matrix) add(a Matrix) Matrix {
-	if m.rows() != a.rows() || m.cols() != a.cols() {
+func (m Matrix) Add(a Matrix) Matrix {
+	if m.Rows() != a.Rows() || m.Cols() != a.Cols() {
 		panic("Can't add 2 different size matrices.")
 	}
-	for i := 0; i < m.rows(); i++ {
-		for j := 0; j < m.cols(); j++ {
+	for i := 0; i < m.Rows(); i++ {
+		for j := 0; j < m.Cols(); j++ {
 			m[i][j] += a[i][j]
 		}
 	}
@@ -29,9 +28,9 @@ func (m Matrix) add(a Matrix) Matrix {
 }
 
 // Multiply each element by some constant
-func (m Matrix) mult(x float64) Matrix {
-	for i := 0; i < m.rows(); i++ {
-		for j := 0; j < m.cols(); j++ {
+func (m Matrix) Mult(x float64) Matrix {
+	for i := 0; i < m.Rows(); i++ {
+		for j := 0; j < m.Cols(); j++ {
 			m[i][j] *= x
 		}
 	}
@@ -39,11 +38,11 @@ func (m Matrix) mult(x float64) Matrix {
 }
 
 // Converts a Matrix to a 1d array
-func (m Matrix) toArray() []float64 {
-	a := make([]float64, m.rows()*m.cols())
+func (m Matrix) ToArray() []float64 {
+	a := make([]float64, m.Rows()*m.Cols())
 	counter := 0
-	for i := 0; i < m.rows(); i++ {
-		for j := 0; j < m.cols(); j++ {
+	for i := 0; i < m.Rows(); i++ {
+		for j := 0; j < m.Cols(); j++ {
 			a[counter] = m[i][j]
 			counter += 1
 		}
@@ -62,9 +61,9 @@ func NewMatrix(rows, cols int) Matrix {
 
 // Returns the transpose of `m`
 func Transpose(m Matrix) Matrix {
-	matrix := NewMatrix(m.cols(), m.rows())
-	for i := 0; i < m.rows(); i++ {
-		for j := 0; j < m.cols(); j++ {
+	matrix := NewMatrix(m.Cols(), m.Rows())
+	for i := 0; i < m.Rows(); i++ {
+		for j := 0; j < m.Cols(); j++ {
 			matrix[j][i] = m[i][j]
 		}
 	}
@@ -72,7 +71,7 @@ func Transpose(m Matrix) Matrix {
 }
 
 // Converts a 1d array or slice to a Matrix
-func toMatrix(array []float64, rows int, cols int) Matrix {
+func ToMatrix(array []float64, rows int, cols int) Matrix {
 	if len(array) != rows*cols {
 		panic("Array length doesn't match rows and cols specified.")
 	}
@@ -101,16 +100,16 @@ func RandomWeightMatrix(rows, cols int) Matrix {
 
 // Returns a new matrix, the dot product of `a` and `b`
 func Dot(a, b Matrix) Matrix {
-	if a.cols() != b.rows() {
+	if a.Cols() != b.Rows() {
 		panic("Rows != Cols")
 	}
 
-	matrix := NewMatrix(a.rows(), b.cols())
+	matrix := NewMatrix(a.Rows(), b.Cols())
 
-	for i := 0; i < a.rows(); i++ {
-		for j := 0; j < b.cols(); j++ {
+	for i := 0; i < a.Rows(); i++ {
+		for j := 0; j < b.Cols(); j++ {
 			sum := 0.0
-			for k := 0; k < b.rows(); k++ {
+			for k := 0; k < b.Rows(); k++ {
 				sum = sum + (a[i][k] * b[k][j])
 			}
 			matrix[i][j] = sum
@@ -121,13 +120,13 @@ func Dot(a, b Matrix) Matrix {
 
 // Subtracts each element in `b` from the corresponding element in `a` and returns a new matrix
 func Sub(a, b Matrix) Matrix {
-	if a.rows() != b.rows() || a.cols() != b.cols() {
+	if a.Rows() != b.Rows() || a.Cols() != b.Cols() {
 		panic("Can't subtract 2 different size matrices.")
 	}
 
-	m := NewMatrix(a.rows(), a.cols())
-	for i := 0; i < m.rows(); i++ {
-		for j := 0; j < m.cols(); j++ {
+	m := NewMatrix(a.Rows(), a.Cols())
+	for i := 0; i < m.Rows(); i++ {
+		for j := 0; j < m.Cols(); j++ {
 			m[i][j] = a[i][j] - b[i][j]
 		}
 	}
@@ -136,9 +135,9 @@ func Sub(a, b Matrix) Matrix {
 
 // Calls `fn` on every element in `m` and returns a new Matrix
 func Map(m Matrix, fn func(x float64) float64) Matrix {
-	matrix := NewMatrix(m.rows(), m.cols())
-	for i := 0; i < m.rows(); i++ {
-		for j := 0; j < m.cols(); j++ {
+	matrix := NewMatrix(m.Rows(), m.Cols())
+	for i := 0; i < m.Rows(); i++ {
+		for j := 0; j < m.Cols(); j++ {
 			matrix[i][j] = fn(m[i][j])
 		}
 	}

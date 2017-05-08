@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"errors"
+	"log"
 	// "fmt"
 	"io"
 	"os"
@@ -12,7 +13,7 @@ import (
 func ReadMNISTCSVData(path string) [][]int {
 	file, err := os.Open(path)
 	if err != nil {
-		panic("AHH")
+		log.Fatalf("Cannot find mnist file '%s'.", path)
 	}
 	defer file.Close()
 
