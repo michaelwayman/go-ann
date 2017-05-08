@@ -1,7 +1,23 @@
-## Neural Network to solve the MNIST data set in Google's GoLang
+## Neural Network in GO
 
-I have the same NN written python in a different repository.
-The Python NN obviously uses numpy for its calculations whereas in this Go NN I have numerous O(n^3) and O(n^2) calculations taking place.
+You won't find any crazy 3rd party libraries here, just whatever built in functionality comes with GO.
+I wrote my own matrix helpers such as dot product O(n^3) and the like, leaving a lot of room for performance improvements.
 
-They are running at similar speeds at the moment, the Golang might be a little faster but they are close.
-My goal is to get them running at about the same speed on single-thread, and then start throwing in all the features that has made Go famous and see how much difference simple parallelizations can make.
+Right now, (single thread, single core)
+
+ - reading in the training data,
+ - training
+ - testing for accuracy
+
+takes ~88 seconds on my computer
+
+
+I want to see if using parallelization or other features of GO, if I can reduce this number pretty significantly.
+Right now my first guess, is to parallelize the "train" function of the neural network, and use channels to get the weight adjustments. Stay tuned for more updates.
+
+To run the example you first need to download the CSV MNIST data set and place it in the folder.
+
+[download training data](https://pjreddie.com/media/files/mnist_train.csv)
+
+[download testing data](https://pjreddie.com/media/files/mnist_test.csv)
+
