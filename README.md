@@ -28,4 +28,4 @@ There are 2 branches for this project each with differing performance.
  1. `mat64` Uses the github.com/gonum/matrix library for matrix operations
     - takes ~290s
 
-**Note:** the same setup in *python* can be found [here](https://github.com/michaelwayman/python-neural-network) and **only takes ~45s**. We can match this number by adding *goroutines* to the `Train()` function but I'm trying to get the matrix math to perform better in general.
+**Note:** the same setup in *python* can be found [here](https://github.com/michaelwayman/python-ann) and **only takes ~45s**. We can match this number by adding *goroutines* to the `Train()` function but I'm trying to get the matrix math to perform better in general.
