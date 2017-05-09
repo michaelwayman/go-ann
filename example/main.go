@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/michaelwayman/go-ann/ann"
+	// "github.com/pkg/profile"
 )
 
 func TrainNeuralNetwork(nn ann.NeuralNetwork) {
@@ -59,6 +60,7 @@ Artificial Neural Network to solve the MNIST data set.
 `
 
 func main() {
+	// defer profile.Start().Stop()
 
 	fmt.Println(welcomeMsg)
 
